@@ -8,4 +8,5 @@ This repository contains verification projects using a UVM-based environment. I 
 | 2 | https://edaplayground.com/x/VTpb | [MUX_4X1](https://github.com/AYYAZmayo/UVM_Based_Verification_Projects/tree/main/mux4x1)                                |
 | 3 | https://edaplayground.com/x/ZB3x | [DFF](https://github.com/AYYAZmayo/UVM_Based_Verification_Projects/tree/main/DFF)                                |
 | 4 | https://edaplayground.com/x/NaQw | [Sequential_Adder](https://github.com/AYYAZmayo/UVM_Based_Verification_Projects/tree/main/Sequential_Adder)                                |
-| 5 | https://edaplayground.com/x/J6X9 | [UART](https://github.com/AYYAZmayo/UVM_Based_Verification_Projects/tree/main/UART)                                |
+| 5 | https://edaplayground.com/x/Sedx | [CLK_Generator](https://github.com/AYYAZmayo/UVM_Based_Verification_Projects/tree/main/CLK_Generator)                                |
+| 6 | https://edaplayground.com/x/J6X9 | [UART](https://github.com/AYYAZmayo/UVM_Based_Verification_Projects/tree/main/UART)                                |
