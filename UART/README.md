@@ -8,3 +8,7 @@ The data in UART serial communication is organized into blocks called Packets. T
 - Configurable Data lengths are {5,6,7,8} bits long.
 # Design Schematic
 ![image](https://github.com/AYYAZmayo/UVM_Based_Verification_Projects/assets/43933912/d2cb78d3-196b-4100-80e8-23b0165316d1)
+
+# UVM Testbench Architecture
+![UVM_architecture drawio (1)](https://github.com/AYYAZmayo/UVM_Based_Verification_Projects/assets/43933912/c5685c86-e464-49bb-b6b0-05cc8c96ebde)
+
