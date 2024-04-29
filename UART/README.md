@@ -11,4 +11,8 @@ The data in UART serial communication is organized into blocks called Packets. T
 
 # UVM Testbench Architecture
 ![UVM_architecture drawio (1)](https://github.com/AYYAZmayo/UVM_Based_Verification_Projects/assets/43933912/c5685c86-e464-49bb-b6b0-05cc8c96ebde)
+# Simulation Waveform
+![Screenshot 2024-04-27 203249](https://github.com/AYYAZmayo/UVM_Based_Verification_Projects/assets/43933912/67940b44-643c-42ea-bbce-d2a0ec911bf1)
+
+
 
