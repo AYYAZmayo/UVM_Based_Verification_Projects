@@ -7,7 +7,9 @@ This design contains a 4-bit adder which is a pure combinational circuit. It has
 # Simulation Waveform
 ![image](https://github.com/AYYAZmayo/UVM_Based_Verification_Projects/assets/43933912/3dc919cf-ec01-445e-a4ce-4054343c5ebf)
 # Coverage Report
+
 SUMMARY
+
     =============================================
     |    Coverage Type    | Weight | Hits/Total |
     =============================================
