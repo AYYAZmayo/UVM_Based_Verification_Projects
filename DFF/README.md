@@ -1,7 +1,7 @@
 # D-FlipFlop
-This design contains a single D-flipflop which is a pure sequention circuit. It has a clk, data-in and reset as input signals and single data-out as output. It has syncronous reset as the Dff will only reset at the posedge of clock.
+This design contains a single D-flipflop which is a pure sequential circuit. It has a clock, data-in and reset as input signals, and single data-out as output. It has synchronous reset as the DFF will only reset at the posedge of the clock.
 # Design Schematic
-![image](https://github.com/AYYAZmayo/UVM_Based_Verification_Projects/assets/43933912/fbc67709-2d34-463b-99f1-05449d5a59cc)
+![schematic](https://github.com/AYYAZmayo/UVM_Based_Verification_Projects/assets/43933912/8e1642f8-b950-496e-96ff-ecf7a7fbbdb3)
 # UVM Testbench Architecture
 ![UVM_architecture drawio (1)](https://github.com/AYYAZmayo/UVM_Based_Verification_Projects/assets/43933912/c5685c86-e464-49bb-b6b0-05cc8c96ebde)
 # Simulation Waveform
