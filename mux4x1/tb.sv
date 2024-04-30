@@ -17,7 +17,7 @@ class transaction extends uvm_sequence_item;
 	
 	
 	endclass
-	
+/////////////////////////////////////////////////////////////////////////	
 class seq1 extends uvm_sequence#(transaction);
 	`uvm_object_utils(seq1)
 	transaction trans;
@@ -26,16 +26,17 @@ class seq1 extends uvm_sequence#(transaction);
 	endfunction
 	
 	virtual task body();
-		trans=transaction::type_id::create("trans");
-		repeat(16) begin
+		
+      repeat(50) begin
+        trans=transaction::type_id::create("trans");
 		start_item(trans);
-		trans.randomize();
-          `uvm_info("seq1",$sformatf("DATA send to driver sel=%0d , x=%0b",trans.sel,trans.x),UVM_NONE);
+        assert(trans.randomize());
+        `uvm_info("seq1",$sformatf("DATA send to driver sel=%0d , x=%0b",trans.sel,trans.x),UVM_NONE);
 		finish_item(trans);
 		end
 		endtask
 endclass
-
+///////////////////////////////////////////////////////////////////////////
 class driver extends uvm_driver#(transaction);
 
 `uvm_component_utils(driver)
@@ -63,7 +64,7 @@ function new(string path="driver", uvm_component parent = null);
 		end
 		endtask
 endclass
-
+//////////////////////////////////////////////////////////////////////////////////
 class monitor extends uvm_monitor;
 	`uvm_component_utils(monitor)
 	function new(string path ="monitor", uvm_component parent=null);
@@ -95,7 +96,7 @@ class monitor extends uvm_monitor;
 		
 	endtask
 endclass
-
+//////////////////////////////////////////////////////////////////////////////////////////////
 class scoreboard extends uvm_scoreboard;
 	`uvm_component_utils(scoreboard)
 	function new(string path="scoreboard", uvm_component parent =null);
@@ -138,9 +139,10 @@ class scoreboard extends uvm_scoreboard;
 			else begin
               `uvm_info("SCO","TEST Failed",UVM_NONE);end
 		end
+      $display("---------------------------------------------------------");
 	endfunction
 	endclass
-	
+//////////////////////////////////////////////////////////////////////////////////////////	
 	class agent extends uvm_agent;
 		`uvm_component_utils(agent)
 		function new(string path="agent", uvm_component parent=null);
@@ -162,7 +164,38 @@ class scoreboard extends uvm_scoreboard;
 		
 		endfunction
 	endclass
-	
+/////////////////////////////////////////////////////////////////////////////////////
+class coverage_subscriber extends uvm_subscriber#(transaction);
+  `uvm_component_utils(coverage_subscriber)
+  transaction tr;
+  
+  function new(string name="coverage_subscriber",uvm_component parent=null);
+    super.new(name,parent);
+    tr=transaction::type_id::create("tr");
+    dut_cov=new(); //covergroup instance
+  endfunction
+  
+  covergroup dut_cov;
+    option.per_instance=1;
+    
+    sel:coverpoint tr.sel;
+    x:coverpoint tr.x;
+    y:coverpoint tr.y;
+    
+  endgroup
+  
+  virtual function void write(input transaction t);
+    tr=t;
+    dut_cov.sample();
+  endfunction
+  
+  virtual function void report_phase(uvm_phase phase);
+    super.report_phase(phase);
+    `uvm_info(get_type_name(),$sformatf("Coverage is %0f",dut_cov.get_coverage()),UVM_NONE);
+  endfunction
+endclass
+  
+////////////////////////////////////////////////////////////////////////////////////
 	class env extends uvm_env;
 		`uvm_component_utils(env)
 		function new(string path="env", uvm_component parent=null);
@@ -171,18 +204,22 @@ class scoreboard extends uvm_scoreboard;
 		
 		agent ag;
 		scoreboard sco;
+        coverage_subscriber covs;
+      
 		virtual function void build_phase(uvm_phase phase);
 			super.build_phase(phase);
 			ag= agent::type_id::create("ag",this);
 			sco= scoreboard::type_id::create("sco",this);
-
+          	covs=coverage_subscriber::type_id::create("covs",this);
 		endfunction
+      
 		virtual function void connect_phase(uvm_phase phase);
 			super.connect_phase(phase);
 			ag.mon.send.connect(sco.imp);
+            ag.mon.send.connect(covs.analysis_export);
 		endfunction
 	endclass
-	
+////////////////////////////////////////////////////////////////////////////////////////////////////	
 	class test extends uvm_test;
 	`uvm_component_utils(test)
 	
@@ -203,7 +240,7 @@ class scoreboard extends uvm_scoreboard;
 		phase.drop_objection(this);
 	endtask
 	endclass
-	
+///////////////////////////////////////////////////////////////////////////////////////////////	
 	module tb;
 	
 	mux_if mif();
