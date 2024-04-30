@@ -1,9 +1,9 @@
 # Adder 
-UART, or universal asynchronous receiver-transmitter, is one of the most used device-to-device communication protocols. UART is a serial communication device that performs parallel-to serial data conversion at the transmitter side and serial-to-parallel data conversion at the receiver side. It is universal because parameters like transfer speed, data speed, etc. are configurable. The letter ‘A’ in UART stands for Asynchronous i.e. there is no clock signal to synchronize or validate the data transmitted from the transmitter and received by the receiver (Asynchronous Serial Communication). This is in contrast to Synchronous Serial Communication, which uses a clock signal that is shared between the transmitter and receiver to “Synchronize” the data between them. If there is no clock between the transmitter and receiver, then how does the receiver know when to read the data? In UART, the transmitter and receiver must agree on timing parameters beforehand (e.g. Baud Rate). Also, UART uses special bits (start and stop bits) at the beginning and ending of each data word to synchronize the transmitter and receiver.
+This design contains a 4-bit adder which is a pure combinational circuit. It has two inputs a and b which are of 4 bits added to gather and generate a sum of 5 bits.
 # Design Schematic
-![image](https://github.com/AYYAZmayo/UVM_Based_Verification_Projects/assets/43933912/d2cb78d3-196b-4100-80e8-23b0165316d1)
+![image](https://github.com/AYYAZmayo/UVM_Based_Verification_Projects/assets/43933912/fbc67709-2d34-463b-99f1-05449d5a59cc)
 # UVM Testbench Architecture
 ![UVM_architecture drawio (1)](https://github.com/AYYAZmayo/UVM_Based_Verification_Projects/assets/43933912/c5685c86-e464-49bb-b6b0-05cc8c96ebde)
 # Simulation Waveform
-![Screenshot 2024-04-27 203249](https://github.com/AYYAZmayo/UVM_Based_Verification_Projects/assets/43933912/67940b44-643c-42ea-bbce-d2a0ec911bf1)
+![image](https://github.com/AYYAZmayo/UVM_Based_Verification_Projects/assets/43933912/3dc919cf-ec01-445e-a4ce-4054343c5ebf)
 # Coverage Report
