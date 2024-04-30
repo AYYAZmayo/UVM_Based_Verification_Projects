@@ -37,7 +37,7 @@ class uart_coverage extends uvm_subscriber #(transaction);
   endfunction
 
   
-  virtual void report_phase(uvm_phase phase);
+  virtual function void report_phase(uvm_phase phase);
     super.report_phase(phase);
     `uvm_info(get_type_name(),$sformatf("Coverage is %f",cov),UVM_LOW)
   endfunction
