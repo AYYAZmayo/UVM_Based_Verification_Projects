@@ -7,8 +7,8 @@ class transaction extends uvm_sequence_item;
 		super.new(name);
 	endfunction
 	
-	rand bit [3:0]a;
-	rand bit [3:0]b;
+	randc bit [3:0]a;
+	randc bit [3:0]b;
 	bit [4:0]y;
 	
 	`uvm_object_utils_begin(transaction)
@@ -18,6 +18,7 @@ class transaction extends uvm_sequence_item;
 	`uvm_object_utils_end
 	
 endclass
+///////////////////////////////////////////////////////////////////////////////////////
 //uvm_sequence is an object class a parameterized class so add parameter	
 class sequence1 extends uvm_sequence#(transaction);
 	`uvm_object_utils(sequence1)
@@ -29,17 +30,17 @@ class sequence1 extends uvm_sequence#(transaction);
 	transaction tr;
 	
 	virtual task body();
-		tr=transaction::type_id::create("tr");
 		//no. of transactions to be Generated
-		repeat(10)begin
-		start_item(tr);
-		tr.randomize();
-          `uvm_info("Sequence1",$sformatf("Stimulus Generated a =%0d , b=%0d",tr.a,tr.b),UVM_NONE);
-		finish_item(tr);
+      repeat(50)begin
+          	tr=transaction::type_id::create("tr");
+			start_item(tr);
+        	assert(tr.randomize());
+        	`uvm_info("Sequence1",$sformatf("Stimulus Generated a =%0d , b=%0d",tr.a,tr.b),UVM_NONE);
+			finish_item(tr);
 		end
 	endtask
 endclass
-
+////////////////////////////////////////////////////////////////////////////////
 class driver extends uvm_driver#(transaction);
 
 	`uvm_component_utils(driver)
@@ -70,7 +71,7 @@ class driver extends uvm_driver#(transaction);
 		
     endtask
 endclass
-	
+/////////////////////////////////////////////////////////////////////////////////	
 	class monitor extends uvm_monitor;
 	
 		`uvm_component_utils(monitor)
@@ -101,7 +102,7 @@ endclass
 			end
         endtask
 	endclass
-	
+	//////////////////////////////////////////////////////////////////////////////////
 	class scoreboard extends uvm_scoreboard;
 		`uvm_component_utils(scoreboard)
 		function new(string path="scoreboard" , uvm_component parent =null);
@@ -127,9 +128,10 @@ endclass
 		  else begin
               `uvm_info("scoreboard"," SCO TEST Failed",UVM_NONE);
             end
+          $display("---------------------------------------------------------------------------------");
 		endfunction
 	endclass
-	
+	////////////////////////////////////////////////////////////////////////////////////
 	class agent extends uvm_agent;
 		`uvm_component_utils(agent)
 		function new (string name ="agent" , uvm_component parent =null);
@@ -153,7 +155,38 @@ endclass
 		endfunction
 		
 	endclass
-	
+	///////////////////////////////////////////////////////////////
+	class coverage_subscriber extends uvm_subscriber#(transaction);
+		`uvm_component_utils(coverage_subscriber)
+		transaction tr;
+		
+		function new(string name ="coverage_subscriber", uvm_component parent=null);
+			super.new(name,parent);
+			tr=transaction::type_id::create("tr");
+			cov=new();
+		endfunction
+		
+		covergroup cov;
+			option.per_instance=1;
+			
+			a:coverpoint tr.a;
+			b:coverpoint tr.b;
+			y:coverpoint tr.y;
+			
+		endgroup:cov
+		
+  //---------------------  write method ----------------------------------------
+  virtual function void write(input transaction t);
+    tr=t;
+    cov.sample();
+  endfunction
+		
+		virtual function void report_phase(uvm_phase phase);
+			super.report_phase(phase);
+			`uvm_info(get_type_name(),$sformatf("Coverage is %0f",cov.get_coverage()),UVM_NONE);
+		endfunction
+	endclass
+	//////////////////////////////////////////////////////////////
 	class env extends uvm_env;
 		`uvm_component_utils(env)
 		function new (string path= "env", uvm_component parent=null);
@@ -162,20 +195,23 @@ endclass
 		
 		agent ag;
 		scoreboard sco;
-		
+		coverage_subscriber covsb;
+      
 		virtual function void build_phase(uvm_phase phase);
 			super.build_phase(phase);
 			ag=agent::type_id::create("ag",this);
 			sco=scoreboard::type_id::create("sco",this);
+          	covsb=coverage_subscriber::type_id::create("covsb",this);
 		endfunction
 		
 		virtual function void connect_phase(uvm_phase phase);
 			super.connect_phase(phase);
 			ag.mon.send_port.connect(sco.imp_port);
+            ag.mon.send_port.connect(covsb.analysis_export);
 		endfunction
 		
 	endclass
-	
+	////////////////////////////////////////////////////////////////
 	class test extends uvm_test;
 		`uvm_component_utils(test)
 		function new (string path="test", uvm_component parent=null);
