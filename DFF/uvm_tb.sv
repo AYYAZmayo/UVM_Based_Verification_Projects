@@ -12,7 +12,7 @@ class transaction extends uvm_sequence_item;
 	bit dout;
 	
 endclass
-
+/////////////////////////////////////////////////////
 //Sequence 1 : DFF is reset  
 class rst_dff extends uvm_sequence#(transaction);
 	`uvm_object_utils(rst_dff)
@@ -23,18 +23,19 @@ class rst_dff extends uvm_sequence#(transaction);
 	transaction tr;
 	
 	virtual task body();
-      tr=transaction::type_id::create("tr");
-	repeat(5) begin
-	start_item(tr);
-	assert(tr.randomize());
-	tr.rst=1'b1;
-      `uvm_info("rst_dff",$sformatf("rst = %0d ,din = %0d",tr.rst,tr.din),UVM_NONE);
+      
+      repeat(2) begin
+        tr=transaction::type_id::create("tr");
+		start_item(tr);
+		assert(tr.randomize());
+		tr.rst=1'b1;
+     	 `uvm_info("rst_dff",$sformatf("rst = %0d ,din = %0d",tr.rst,tr.din),UVM_NONE);
 	finish_item(tr);
     end
 	endtask
 	
 endclass
-
+////////////////////////////////////////////////////////
 //Sequence 2 : DFF Valid Data In  
 class valid_dff_input extends uvm_sequence#(transaction);
 	`uvm_object_utils(valid_dff_input)
@@ -45,8 +46,9 @@ class valid_dff_input extends uvm_sequence#(transaction);
 	transaction tr;
 	
 	virtual task body();
-    tr=transaction::type_id::create("tr");
+    
 	repeat(15) begin
+    tr=transaction::type_id::create("tr");
 	start_item(tr);
 	assert(tr.randomize());
 	tr.rst=1'b0;
@@ -56,7 +58,7 @@ class valid_dff_input extends uvm_sequence#(transaction);
 	endtask
 	
 endclass
-
+////////////////////////////////////////////////////////////////////////////////
 //Sequence 3 : Random RST and Data-In
 class rand_dff_din_rst extends uvm_sequence#(transaction);
 	`uvm_object_utils(rand_dff_din_rst)
@@ -67,8 +69,9 @@ class rand_dff_din_rst extends uvm_sequence#(transaction);
 	transaction tr;
 	
 	virtual task body();
-    tr=transaction::type_id::create("tr");
+    
 	repeat(15) begin
+    tr=transaction::type_id::create("tr");
 	start_item(tr);
 	assert(tr.randomize());
       `uvm_info("rand_dff_din_rst",$sformatf("rst = %0d ,din = %0d",tr.rst,tr.din),UVM_NONE);
@@ -77,7 +80,7 @@ class rand_dff_din_rst extends uvm_sequence#(transaction);
 	endtask
 	
 endclass
-
+//////////////////////////////////////////////////////////////////////////////////
 class driver extends uvm_driver#(transaction);
 	`uvm_component_utils(driver)
 	function new(string name="driver", uvm_component parent=null);
@@ -106,7 +109,7 @@ class driver extends uvm_driver#(transaction);
 		end
 	endtask
 endclass
-
+/////////////////////////////////////////////////////////////////////////////////////
 class monitor extends uvm_component;
 	`uvm_component_utils(monitor)
 	
@@ -140,7 +143,7 @@ class monitor extends uvm_component;
 	
 	
 endclass
-	
+///////////////////////////////////////////////////////////////////////////////	
 class scoreboard extends uvm_scoreboard;
 		`uvm_component_utils(scoreboard)
 		function new(string name ="scoreboard", uvm_component parent=null);
@@ -173,7 +176,7 @@ class scoreboard extends uvm_scoreboard;
 		endfunction
 		
 	endclass
-	
+/////////////////////////////////////////////////////////////////////////////////////////////////////	
 class agent extends uvm_agent;
 	`uvm_component_utils(agent)
 	
@@ -199,7 +202,52 @@ class agent extends uvm_agent;
 	endfunction
 	
 endclass
-
+///////////////////////////////////////////////////////////////////////////////////////////////////
+class coverage_sub extends uvm_subscriber#(transaction);
+  `uvm_component_utils(coverage_sub)
+  
+  transaction tr;
+  
+  function new(string name="coverage_sub",uvm_component parent =null);
+    super.new(name,parent);
+    tr=transaction::type_id::create("tr");
+    cov=new();
+  endfunction
+  
+  covergroup cov;
+    option.per_instance=1;
+    
+    RST:coverpoint tr.rst{
+      bins rst_high[]={1};
+      bins rst_low[]={0};
+    }
+	
+    Din:coverpoint tr.din{
+      bins din_high[]={1};
+      bins din_low[]={0};
+    }
+    
+    Dout:coverpoint tr.dout{
+      bins dout_high[]={1};
+      bins dout_low[]={0};
+    }
+    
+    RST_x_Din:cross RST,Din;
+  endgroup
+  
+  virtual function void write(transaction t);
+    tr=t;
+    cov.sample();
+  endfunction
+  
+  virtual function void report_phase(uvm_phase phase);
+    super.report_phase(phase);
+    `uvm_info(get_type_name(),$sformatf("Coverage is %0f",cov.get_coverage()),UVM_NONE);
+  endfunction
+  
+endclass
+///////////////////////////////////////////////////////////////////////////////////////////////////
+  
 class env extends uvm_env;
 	`uvm_component_utils(env)
 	
@@ -209,20 +257,24 @@ class env extends uvm_env;
 	
 	agent ag;
 	scoreboard sco;
-	
+	coverage_sub covs;
+  
 	virtual function void build_phase(uvm_phase phase);
 		super.build_phase(phase);
 		ag=agent::type_id::create("ag",this);
 		sco=scoreboard::type_id::create("sco",this);
+        covs=coverage_sub::type_id::create("covs",this);
 	endfunction
 	
 	virtual function void connect_phase(uvm_phase phase);
 		super.connect_phase(phase);
 		ag.mon.send_data.connect(sco.imp);
+        ag.mon.send_data.connect(covs.analysis_export);
 	endfunction
 	
 endclass
-
+////////////////////////////////////////////////////////////////////////////////////////////////////
+  
 class test extends uvm_test;
 	`uvm_component_utils(test)
 	function new (string name="test", uvm_component parent =null);
@@ -254,7 +306,7 @@ class test extends uvm_test;
 	endtask
 	
 	endclass
-	
+//////////////////////////////////////////////////////////////////////	
 module tb;
 
 	dff_if dif();
