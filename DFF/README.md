@@ -5,10 +5,12 @@ This design contains a single D-flipflop which is a pure sequential circuit. It 
 # UVM Testbench Architecture
 ![UVM_architecture drawio (1)](https://github.com/AYYAZmayo/UVM_Based_Verification_Projects/assets/43933912/c5685c86-e464-49bb-b6b0-05cc8c96ebde)
 # Simulation Waveform
-![image](https://github.com/AYYAZmayo/UVM_Based_Verification_Projects/assets/43933912/3dc919cf-ec01-445e-a4ce-4054343c5ebf)
+![image](https://github.com/AYYAZmayo/UVM_Based_Verification_Projects/assets/43933912/6919c29e-a32a-42ff-8628-b6cb7aef66e5)
+
 # Coverage Report
 
- SUMMARY
+`SUMMARY`
+
      =============================================
      |    Coverage Type    | Weight | Hits/Total |
      =============================================
@@ -16,7 +18,7 @@ This design contains a single D-flipflop which is a pure sequential circuit. It 
      |---------------------|--------|------------|
      | Types               |        |      1 / 1 |
      =============================================
-     WEIGHTED AVERAGE LOCAL: 100.000%
+     WEIGHTED AVERAGE: 100.000%
  
  
      COVERGROUP COVERAGE
