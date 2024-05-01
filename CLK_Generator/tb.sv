@@ -18,7 +18,7 @@ class transaction extends uvm_sequence_item;
 		buad inside {4800, 9600, 14400, 19200, 38400, 57600};
 	}
 endclass
-	
+////////////////////////////////////////////////////////////////////////////////	
 class reset_seq extends uvm_sequence#(transaction);
 	`uvm_object_utils(reset_seq)
 	function new(string name="reset_seq");
@@ -38,7 +38,7 @@ class reset_seq extends uvm_sequence#(transaction);
 		end
 	endtask
 endclass
-
+/////////////////////////////////////////////////////////////////////////////
 class baud_rate_seq extends uvm_sequence#(transaction);
 	`uvm_object_utils(baud_rate_seq)
 	function new(string name="baud_rate_seq");
@@ -58,7 +58,7 @@ class baud_rate_seq extends uvm_sequence#(transaction);
 		end
 	endtask
 endclass
-	
+	////////////////////////////////////////////////////////////////////
 class driver extends uvm_driver#(transaction);
 	`uvm_component_utils(driver)
 	function new(string name="driver", uvm_component parent=null);
@@ -95,7 +95,7 @@ class driver extends uvm_driver#(transaction);
 		end
 	endtask
 	endclass
-	
+	////////////////////////////////////////////////////////////////////
 	class monitor extends uvm_monitor;
 		`uvm_component_utils(monitor)
 		function new(string name="monitor", uvm_component parent=null);
@@ -142,7 +142,7 @@ class driver extends uvm_driver#(transaction);
 			end
 		endtask
 	endclass
-		
+////////////////////////////////////////////////////////////////////		
 class scoreboard extends uvm_scoreboard;
 	`uvm_component_utils(scoreboard)
 	function new (string name ="scoreboard", uvm_component parent=null);
@@ -231,7 +231,7 @@ class scoreboard extends uvm_scoreboard;
 		endfunction
        
 	endclass
-////     
+///////////////////////////////////////////////////////////////////////////////////////     
 	class agent extends uvm_agent;
 	`uvm_component_utils(agent)
 	function new(string name="agent",uvm_component parent =null);
@@ -258,6 +258,38 @@ class scoreboard extends uvm_scoreboard;
 	
 	endclass
 ///////////////////////////////////////////////////////////////////////////
+class coverage_sub extends uvm_subscriber#(transaction);
+  `uvm_component_utils(coverage_sub)
+  transaction tr;
+  
+  function new (string name="coverage_sub", uvm_component parent=null);
+    super.new(name,parent);
+    tr=transaction::type_id::create("tr");
+    covg=new();
+  endfunction
+  
+  covergroup covg;
+    option.per_instance=1;
+    
+    BAUD:coverpoint tr.buad {
+      bins baud_val[]={4800, 9600, 14400, 19200, 38400, 57600};
+    }
+	
+  endgroup
+  
+  virtual function void write(transaction t);
+    tr=t;
+    covg.sample();
+  endfunction
+  
+  virtual function void report_phase(uvm_phase phase);
+    super.report_phase(phase);
+    `uvm_info(get_type_name(),$sformatf("Coverage is %0f",covg.get_coverage()),UVM_NONE);
+  endfunction
+  
+endclass
+
+///////////////////////////////////////////////////////////////////////////
 	class env extends uvm_env;
 	`uvm_component_utils(env)
 	
@@ -267,21 +299,24 @@ class scoreboard extends uvm_scoreboard;
 	
 	agent ag;
 	scoreboard sco;
-	
+	coverage_sub covgs;
+      
 	virtual function void build_phase(uvm_phase phase);
 		super.build_phase(phase);
 		ag=agent::type_id::create("ag",this);
 		sco=scoreboard::type_id::create("sco",this);
+        covgs=coverage_sub::type_id::create("covgs",this);
 	endfunction
 	
 	virtual function void connect_phase(uvm_phase phase);
 		super.connect_phase(phase);
 		ag.mon.send.connect(sco.imp);
+        ag.mon.send.connect(covgs.analysis_export);
 	endfunction
 	
 	endclass
 	
-	
+////////////////////////////////////////////////////////////////////////	
 	class test extends uvm_test;
 		`uvm_component_utils(test)
 	
