@@ -1,5 +1,5 @@
 # SPI MEMORY
-
+This design contains an SPI interface to perform a write and read transaction to and from the memory. Here, SPI controller acts as SPI master and generates resquest to SPI slave based on wr-enable from the top. The SPI controller sends 16 bits(8 bit data-in + 8bit addr) on the MOSI pin when the chip select(CS) is de-asserted. SPI-slave recevies the data and store it into the memory. Similarly upon read request from SPI master controller SPI-slave sends 8 bit of data by from the provided address. The schematic of SPI-memory,SPI controller fsm and slave fsm are shown below. 
 
 # Schematic
 ![image](https://github.com/AYYAZmayo/UVM_Based_Verification_Projects/assets/43933912/bc02009d-be55-44ef-b197-70a66628e6e4)
