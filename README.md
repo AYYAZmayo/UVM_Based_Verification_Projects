@@ -10,3 +10,4 @@ This repository contains verification projects using a UVM-based environment. I 
 | 4 | https://edaplayground.com/x/NaQw | [Sequential_Adder](https://github.com/AYYAZmayo/UVM_Based_Verification_Projects/tree/main/Sequential_Adder)                                |
 | 5 | https://edaplayground.com/x/Sedx | [CLK_Generator](https://github.com/AYYAZmayo/UVM_Based_Verification_Projects/tree/main/CLK_Generator)                                |
 | 6 | https://edaplayground.com/x/J6X9 | [UART](https://github.com/AYYAZmayo/UVM_Based_Verification_Projects/tree/main/UART)                                |
+| 7 | https://edaplayground.com/x/Vryw | [SPI_MEMORY](https://github.com/AYYAZmayo/UVM_Based_Verification_Projects/tree/main/SPI_MEMORY)                                |
