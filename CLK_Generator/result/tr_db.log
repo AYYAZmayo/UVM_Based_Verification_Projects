@@ -1,0 +1,2 @@
+  CREATE_STREAM @0 {NAME:rst_seq T:Transactions SCOPE:uvm_test_top.envr.ag.seqr STREAM:625}
+  CREATE_STREAM @10 {NAME:baud_seq T:Transactions SCOPE:uvm_test_top.envr.ag.seqr STREAM:663}
