@@ -1,0 +1,10 @@
+  CREATE_STREAM @0 {NAME:cnwr T:Transactions SCOPE:uvm_test_top.e.agent_inst.seqr STREAM:675}
+  CREATE_STREAM @110 {NAME:cnrd T:Transactions SCOPE:uvm_test_top.e.agent_inst.seqr STREAM:730}
+  CREATE_STREAM @230 {NAME:r1wr T:Transactions SCOPE:uvm_test_top.e.agent_inst.seqr STREAM:762}
+  CREATE_STREAM @350 {NAME:r1rd T:Transactions SCOPE:uvm_test_top.e.agent_inst.seqr STREAM:794}
+  CREATE_STREAM @470 {NAME:r2wr T:Transactions SCOPE:uvm_test_top.e.agent_inst.seqr STREAM:826}
+  CREATE_STREAM @590 {NAME:r2rd T:Transactions SCOPE:uvm_test_top.e.agent_inst.seqr STREAM:858}
+  CREATE_STREAM @710 {NAME:r3wr T:Transactions SCOPE:uvm_test_top.e.agent_inst.seqr STREAM:890}
+  CREATE_STREAM @830 {NAME:r3rd T:Transactions SCOPE:uvm_test_top.e.agent_inst.seqr STREAM:922}
+  CREATE_STREAM @950 {NAME:r4wr T:Transactions SCOPE:uvm_test_top.e.agent_inst.seqr STREAM:954}
+  CREATE_STREAM @1070 {NAME:r4rd T:Transactions SCOPE:uvm_test_top.e.agent_inst.seqr STREAM:986}
